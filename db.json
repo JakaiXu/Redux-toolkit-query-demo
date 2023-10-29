@@ -1,30 +1,6 @@
 {
-  "clients": [
-    {
-      "name": "Mary",
-      "id": 1
-    },
-    {
-      "name": "Llewellyn",
-      "id": 2
-    },
-    {
-      "name": "Kade",
-      "id": 3
-    },
-    {
-      "name": "Raphaelle",
-      "id": 4
-    },
-    {
-      "name": "Sienna",
-      "id": 5
-    },
-    {
-      "name": "Alessia",
-      "id": 6
-    }
-  ],
+  "clients": [],
   "albums": [],
-  "photos": []
+  "photos": [
+  ]
 }

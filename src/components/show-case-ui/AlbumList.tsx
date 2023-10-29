@@ -1,73 +1,92 @@
 import {
+  Box,
   ButtonGroup,
   Card,
+  Container,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { CloseTwoTone, DeleteTwoTone } from "@mui/icons-material";
-import { useState } from "react";
-import PhotoList from "./PhotoList";
-import { ClientData } from "../../store/slices/used-for-AsyncThunk/clientsSlice";
+import { CloseTwoTone } from "@mui/icons-material";
 import { orange } from "@mui/material/colors";
+import { useAddAlbumMutation, useFetchAlbumsQuery } from "../../store/store";
+import Skeleton from "../../utils/Skeleton";
+import AlbumItem, { AlbumItemProps } from "./AlbumItem";
+import { ClientData } from "../../store/slices/used-for-AsyncThunk/clientsSlice";
 
 const AlbumList = ({
   client,
-  handleCloseUser,
+  toggleAlbum,
 }: {
   client: ClientData;
-  handleCloseUser: () => void;
+  toggleAlbum: () => void;
 }) => {
-  const [showPhoto, setShowPhoto] = useState(false);
-  const handleAddPhoto = () => {
-    setShowPhoto(!showPhoto);
+  const { data, isError, isLoading } = useFetchAlbumsQuery(client);
+  const [addAlbum, results] = useAddAlbumMutation();
+  const handleAddAlbum = () => {
+    addAlbum(client);
+
   };
+  let content;
+  if (isLoading) {
+    content = <Skeleton times={1} w={900} h={200} />;
+  } else if (isError) {
+    content = <Box>Error loading albums.</Box>;
+  } else {
+    content = data.map((album: AlbumItemProps) => (
+      <AlbumItem album={album} key={album.id} />
+    ));
+  }
   return (
-    <>
-      {showPhoto ? (
-        <PhotoList handleCloseAlbum={handleAddPhoto} />
-      ) : (
-        <Card sx={{ width: "70vw", height: "30vh", bgcolor: orange[200] }}>
-          <Stack
-            sx={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingX: 10,
-              background: "rgba(105,150,150,0.2)",
-              alignItems: "center",
-              opacity: 0.5,
-            }}
-          >
-            <Typography
-              sx={{
-                fontWeight: "bold",
-                fontSize: 20,
-                color: "black",
-              }}
-            >
-              {client.name}'Album
-            </Typography>
-            <ButtonGroup>
-              <IconButton>
-                <EditNoteIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteTwoTone />
-              </IconButton>
-              <IconButton onClick={handleAddPhoto}>
-                <AddBoxIcon />
-              </IconButton>
-              <IconButton onClick={() => handleCloseUser()}>
-                <CloseTwoTone />
-              </IconButton>
-            </ButtonGroup>
-          </Stack>
-        </Card>
-      )}
-    </>
+    <Card sx={styles.container}>
+      <Stack sx={styles.title}>
+        <Typography sx={styles.albumName}>{client.name}'Albums</Typography>
+        <ButtonGroup>
+          <IconButton onClick={handleAddAlbum}>
+            <AddBoxIcon />
+            {results.isLoading ? (
+              <Typography>Is Creating an album</Typography>
+            ) : (
+              <Typography>Create an album</Typography>
+            )}
+          </IconButton>
+          <IconButton onClick={toggleAlbum}>
+            <CloseTwoTone />
+          </IconButton>
+        </ButtonGroup>
+      </Stack>
+      <Container sx={styles.albumItemContainer}>{content}</Container>
+    </Card>
   );
 };
 
 export default AlbumList;
+const styles = {
+  container: {
+    width: 1100,
+    minHeight: "20vh",
+    height: "max-content",
+    bgcolor: orange[200],
+    marginTop: 2,
+  },
+  title: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingX: 10,
+    background: "rgba(105,150,150,0.2)",
+    alignItems: "center",
+    opacity: 0.5,
+  },
+  albumName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "black",
+  },
+  albumItemContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap:2,
+    padding:2
+  },
+};

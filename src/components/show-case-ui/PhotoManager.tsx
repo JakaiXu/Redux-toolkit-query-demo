@@ -2,9 +2,9 @@ import { Container, Grid, Button, Box, Typography, Stack } from "@mui/material";
 import { useSelector } from "react-redux";
 import ClientItem from "./ClientItem";
 import { RootState, addClients } from "../../store/store";
+import Skeleton from "../../utils/Skeleton";
 import { useEffect } from "react";
 import { fetchClients } from "../../store/store";
-import Skeleton from "../../utils/Skeleton";
 import { useThunk } from "../../hooks/useThunk";
 
 const PhotoManager = () => {
@@ -16,57 +16,58 @@ const PhotoManager = () => {
   useEffect(() => {
     doFetchClients();
   }, [doFetchClients]);
-  const handleAddUser = () => {
-    doCreateClients(addClients);
+  const handleAddClient = () => {
+    doCreateClients();
   };
-  let content;
-  if (isLoadingClients) {
-    content = <Skeleton times={3} w={350} h={200} />;
-  } else if (loadingClientsError) {
-    content = <Box>Error fetching data...</Box>;
-  } else {
-    content = data.map((client) => {
-      return (
-        <Grid item key={client.id}>
-          {isCreatingClient ? (
-            <Skeleton times={1} w={350} h={200} />
-          ) : (
-            <ClientItem key={client.id} client={client} />
-          )}
-        </Grid>
-      );
-    });
-  }
   return (
-    <Container>
-      <Stack
-        sx={{
-          justifyContent: "space-between",
-          flexDirection: "row",
-          paddingLeft: 3,
-          paddingRight: 7,
-        }}
-      >
-        <Typography sx={{ fontSize: 30, fontWeight: "bold" }}>
-          Photo Manager
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={handleAddUser}
-          sx={{ marginBottom: 4 }}
-        >
-          {isCreatingClient ? "Creating Client" : "Add Client"}
-        </Button>
-      </Stack>
-
-      <Typography>
-        {creatingClientError && "Failed to create a client..."}
-      </Typography>
-      <Grid container gap={3}>
-        {content}
-      </Grid>
-    </Container>
+    <>
+      {isLoadingClients ? (
+        <Container>
+          <Skeleton times={3} w={350} h={200} />
+        </Container>
+      ) : loadingClientsError ? (
+        <Container>
+          <Box>Loading Clients failed.</Box>
+        </Container>
+      ) : (
+        <Container>
+          <Stack sx={styles.title}>
+            <Typography sx={{ fontSize: 30, fontWeight: "bold" }}>
+              Photo Manager
+            </Typography>
+            <Button
+              variant={isCreatingClient ? "outlined" : "contained"}
+              onClick={handleAddClient}
+              sx={{ marginBottom: 4 }}
+            >
+              {isCreatingClient ? "Creating Client" : "Add Client"}
+            </Button>
+          </Stack>
+          <Typography>
+            {creatingClientError && "Failed to create a client..."}
+          </Typography>
+          <Grid container gap={3}>
+            {data.map((client) => {
+              return (
+                <Grid item key={client.id}>
+                  <ClientItem key={client.id} client={client} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Container>
+      )}
+    </>
   );
 };
 
 export default PhotoManager;
+
+const styles = {
+  title: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingLeft: 3,
+    paddingRight: 7,
+  },
+};
