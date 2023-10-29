@@ -1,27 +1,7 @@
-# React + TypeScript + Vite
+"This is a demo photo management application designed exclusively for studying Redux Toolkit (RTK) and Redux Toolkit Query (RTKQ).
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The application features a three-level nested CRUD (Create, Read, Update, Delete) system, primarily for the client-side. For managing client-side operations, the application utilizes Async Thunks to seamlessly handle tasks such as adding, fetching, and removing data.
 
-Currently, two official plugins are available:
+On the album and photo management side, Redux Toolkit Query (RTKQ) is employed to efficiently manage these operations, providing a seamless and efficient experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+It's important to note that this application is primarily intended for testing CRUD operations and currently focuses on these functionalities. Additional, more generic features and details are planned but have not yet been implemented."
