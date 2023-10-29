@@ -1,10 +1,11 @@
-import {  useRemoveAlbumMutation } from "../../store/store";
-import {  Card, Container, IconButton, Typography } from "@mui/material";
-import { getRandomColor } from "../../utils/randomColor";
+import { useRemoveAlbumMutation } from "../../store/store";
+import { Card, Container, IconButton, Typography } from "@mui/material";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import { useState } from "react";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import PhotoList from "./PhotoList";
+import { cyan } from "@mui/material/colors";
+import LoadingButton from "@mui/lab/LoadingButton";
 export interface AlbumItemProps {
   id: number;
   title: string;
@@ -15,7 +16,6 @@ const AlbumItem = ({ album }: { album: AlbumItemProps }) => {
   const [removeAlbum, results] = useRemoveAlbumMutation();
   const handleRemoveAlbum = () => {
     removeAlbum(album);
-    console.log(album);
   };
   const togglePhotoList = () => {
     setShowPhotoList(!showPhotoList);
@@ -37,13 +37,15 @@ const AlbumItem = ({ album }: { album: AlbumItemProps }) => {
             <AspectRatioIcon />
             <Typography sx={styles.title}>Open Photo List</Typography>
           </IconButton>
-          {results.isLoading ? (
-            <Typography>Is deleting</Typography>
-          ) : (
-            <IconButton sx={styles.deleteButton} onClick={handleRemoveAlbum}>
+          {
+            <LoadingButton
+              loading={results.isLoading}
+              onClick={handleRemoveAlbum}
+              sx={styles.deleteButton}
+            >
               <DeleteOutlineOutlined />
-            </IconButton>
-          )}
+            </LoadingButton>
+          }
         </Card>
       )}
     </>
@@ -60,7 +62,7 @@ const styles = {
   albumItem: {
     width: 200,
     height: 250,
-    bgcolor: getRandomColor(),
+    bgcolor: cyan[100],
     position: "relative",
   },
   albumName: {

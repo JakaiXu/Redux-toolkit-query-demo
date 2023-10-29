@@ -14,6 +14,7 @@ import { useAddAlbumMutation, useFetchAlbumsQuery } from "../../store/store";
 import Skeleton from "../../utils/Skeleton";
 import AlbumItem, { AlbumItemProps } from "./AlbumItem";
 import { ClientData } from "../../store/slices/used-for-AsyncThunk/clientsSlice";
+import { LoadingButton } from "@mui/lab";
 
 const AlbumList = ({
   client,
@@ -26,7 +27,6 @@ const AlbumList = ({
   const [addAlbum, results] = useAddAlbumMutation();
   const handleAddAlbum = () => {
     addAlbum(client);
-
   };
   let content;
   if (isLoading) {
@@ -43,14 +43,11 @@ const AlbumList = ({
       <Stack sx={styles.title}>
         <Typography sx={styles.albumName}>{client.name}'Albums</Typography>
         <ButtonGroup>
-          <IconButton onClick={handleAddAlbum}>
-            <AddBoxIcon />
-            {results.isLoading ? (
-              <Typography>Is Creating an album</Typography>
-            ) : (
-              <Typography>Create an album</Typography>
-            )}
-          </IconButton>
+          {
+            <LoadingButton loading={results.isLoading} onClick={handleAddAlbum}>
+              <AddBoxIcon />
+            </LoadingButton>
+          }
           <IconButton onClick={toggleAlbum}>
             <CloseTwoTone />
           </IconButton>
@@ -86,7 +83,7 @@ const styles = {
   albumItemContainer: {
     display: "flex",
     flexDirection: "row",
-    gap:2,
-    padding:2
+    gap: 2,
+    padding: 2,
   },
 };

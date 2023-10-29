@@ -14,6 +14,7 @@ import { AlbumItemProps } from "./AlbumItem";
 import { useAddPhotoMutation, useFetchPhotosQuery } from "../../store/store";
 import Skeleton from "../../utils/Skeleton";
 import PhotoItem from "./PhotoItem";
+import { LoadingButton } from "@mui/lab";
 export interface PhotoProps {
   id: number;
   url: string;
@@ -33,7 +34,7 @@ const PhotoList = ({
   };
   let content;
   if (isFetching) {
-    content = <Skeleton times={4} w={200} h={200} />;
+    content = <Skeleton times={1} w={200} h={200} />;
   } else if (isError) {
     content = <Box>Error loading photos.</Box>;
   } else {
@@ -46,14 +47,11 @@ const PhotoList = ({
       <Stack sx={styles.title}>
         <Typography sx={styles.photoListTitle}>{album.title}</Typography>
         <ButtonGroup>
-          {results.isLoading ? (
-            <Typography>Is adding a photo...</Typography>
-          ) : (
-            <IconButton onClick={handleAddPhoto}>
+          {
+            <LoadingButton loading={results.isLoading} onClick={handleAddPhoto}>
               <AddBoxIcon />
-              <Typography sx={{ marginLeft: 1 }}>Add a photo</Typography>
-            </IconButton>
-          )}
+            </LoadingButton>
+          }
           <IconButton onClick={togglePhotoList}>
             <PreviewIcon />
           </IconButton>
@@ -76,7 +74,7 @@ const styles = {
   title: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingX: 10,
+    paddingX: 3,
     background: "rgba(105,150,150,0.2)",
     alignItems: "center",
     opacity: 0.5,

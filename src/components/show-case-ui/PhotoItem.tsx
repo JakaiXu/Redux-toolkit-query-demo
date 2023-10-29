@@ -1,8 +1,9 @@
 import { PhotoProps } from "./PhotoList";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import { getRandomColor } from "../../utils/randomColor";
 import { useRemovePhotoMutation } from "../../store/store";
+import { LoadingButton } from "@mui/lab";
 
 const PhotoItem = ({ photo }: { photo: PhotoProps }) => {
   const [removePhoto, results] = useRemovePhotoMutation();
@@ -14,13 +15,14 @@ const PhotoItem = ({ photo }: { photo: PhotoProps }) => {
       <Box component="img" sx={styles.img} src={photo.url} />
       <Stack sx={styles.title}>
         <Typography sx={styles.label}>{photo.id}</Typography>
-        {results.isLoading ? (
-          <Typography>Is deleting photo</Typography>
-        ) : (
-          <IconButton onClick={handleRemovePhoto}>
+        {
+          <LoadingButton
+            loading={results.isLoading}
+            onClick={handleRemovePhoto}
+          >
             <DeleteOutlineOutlined />
-          </IconButton>
-        )}
+          </LoadingButton>
+        }
       </Stack>
     </Box>
   );
