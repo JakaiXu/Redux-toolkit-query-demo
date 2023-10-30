@@ -27,13 +27,13 @@ const PhotoList = ({
   togglePhotoList: () => void;
   album: AlbumItemProps;
 }) => {
-  const { data, isError, isFetching } = useFetchPhotosQuery(album);
+  const { data, isError, isLoading } = useFetchPhotosQuery(album);
   const [addPhoto, results] = useAddPhotoMutation();
   const handleAddPhoto = () => {
     addPhoto(album);
   };
   let content;
-  if (isFetching) {
+  if (isLoading) {
     content = <Skeleton times={1} w={200} h={200} />;
   } else if (isError) {
     content = <Box>Error loading photos.</Box>;

@@ -1,5 +1,5 @@
 import { PhotoProps } from "./PhotoList";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import { useRemovePhotoMutation } from "../../store/store";
 import { LoadingButton } from "@mui/lab";
@@ -16,11 +16,15 @@ const PhotoItem = ({ photo }: { photo: PhotoProps }) => {
     >
       <Box component="img" sx={styles.img} src={photo.url} />
       <Box sx={styles.hoverBox}>
-        {
-          <LoadingButton loading={results.isLoading}>
+        {results.isLoading ? (
+          <LoadingButton>
+            <CircularProgress size={40} sx={{color:"white"}}  />
+          </LoadingButton>
+        ) : (
+          <LoadingButton>
             <DeleteOutlineOutlined sx={styles.icon} />
           </LoadingButton>
-        }
+        )}
       </Box>
     </Box>
   );
