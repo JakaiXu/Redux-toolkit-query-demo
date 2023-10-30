@@ -1,6 +1,7 @@
-import { createApi, } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
+import { PhotoProps } from "../../components/show-case-ui/PhotoList";
 
 interface DataProps {
   id: number;
@@ -31,12 +32,17 @@ const photosApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: "http://localhost:3005/",
   }),
-  tagTypes: ["Photo"],
+  tagTypes: ["Photo", "AlbumsPhoto"],
   endpoints(builder) {
     return {
       fetchPhotos: builder.query({
         providesTags: (result, error, album) => {
-          return [{ type: "Photo", id: album.id },'Photo'];
+          const tags = result.map((photo: PhotoProps) => {
+            return { type: "Photo", id: photo.id };
+          });
+          tags.push({ type: "AlbumsPhoto", id: album.id });
+          return tags;
+          // [{ type: "Photo", id: album.id }, "Photo"];
         },
         query: (album) => {
           return {
@@ -50,7 +56,7 @@ const photosApi = createApi({
       }),
       addPhoto: builder.mutation({
         invalidatesTags: (result, error, album) => {
-          return [{ type: "Photo", id: album.id }];
+          return [{ type: "AlbumsPhoto", id: album.id }];
         },
         query: (album) => {
           return {
@@ -65,7 +71,7 @@ const photosApi = createApi({
       }),
       removePhoto: builder.mutation({
         invalidatesTags: (result, error, photo) => {
-          return [{ type: "Photo", id: photo.id },'Photo'];
+          return [{ type: "Photo", id: photo.id }];
         },
         query: (photo) => {
           return {

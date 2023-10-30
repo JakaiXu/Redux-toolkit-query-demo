@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { createApi } from "@reduxjs/toolkit/query/react";
 // import {  fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import axios from "axios";
+import { AlbumItemProps } from "../../components/show-case-ui/AlbumItem";
 interface DataProps {
   id: number;
 }
@@ -30,15 +31,21 @@ export const albumsApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: "http://localhost:3005/",
   }),
-  tagTypes: ["Album"],
+  tagTypes: ["Album","ClientsAlbums"],
   endpoints(builder) {
     return {
       fetchAlbums: builder.query({
         providesTags:
           //  ["Album"],
           (result, error, client) => {
-            return [{ type: "Album", id: client.id, },'Album'];
+            const tags = result.map((album: AlbumItemProps) => {
+              return { type: "Album", id: album.id };
+            });
+            tags.push({ type: "ClientsAlbums", id: client.id });
+            return tags;
+            // return [{ type: "Album", id: client.id, },'Album'];
           },
+
         query: (client) => {
           return {
             url: "albums",
@@ -53,7 +60,7 @@ export const albumsApi = createApi({
         invalidatesTags:
           // ["Album"],
           (result, error, client) => {
-            return [{ type: "Album", id: client.id }];
+            return [{ type: "ClientsAlbums", id: client.id }];
           },
         query: (client) => {
           return {
@@ -67,7 +74,7 @@ export const albumsApi = createApi({
         invalidatesTags:
           // ["Album"],
           (result, error, album) => {
-            return [{ type: "Album", id: album.id },"Album"];
+            return [{ type: "Album", id: album.id }];
           },
         query: (album) => {
           return {
